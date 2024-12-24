@@ -33,8 +33,6 @@ const Login = () => {
   const [resetEmail, setResetEmail] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
 
-
-
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
