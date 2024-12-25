@@ -1,4 +1,4 @@
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import Logo from "../assets/Chief.jpg";
 import Google from "../assets/Google.jsx";
 import { useAuth } from "@/contexts/authContext";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -36,6 +37,36 @@ const Login = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { duration: 0.3 }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { duration: 0.3 }
+    }
+  };
+
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
+  };
+
+  
   useEffect(() => {
     if (currentUser) {
       try {
@@ -115,272 +146,319 @@ const Login = () => {
 
   return (
     <div className="bg-gray-200 min-h-screen flex items-center justify-center p-4">
-      <div className="grid md:grid-cols-2 grid-cols-1 bg-white w-full max-w-4xl rounded-lg shadow-lg">
-        <div className="flex justify-center items-center p-4 md:p-10">
+      <motion.div 
+        className="grid md:grid-cols-2 grid-cols-1 bg-white w-full max-w-4xl rounded-lg shadow-lg"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <motion.div 
+          className="flex justify-center items-center p-4 md:p-10"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <img
             src={Logo}
             alt="Logo"
             className="w-48 h-48 md:w-96 md:h-96 object-contain"
           />
-        </div>
+        </motion.div>
 
         <div className="w-full p-4 md:p-10">
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Alert variant="destructive" className="mb-4">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {currentUser && !showChangePassword ? (
-            <div className="flex flex-col items-center space-y-4">
-              <h2 className="text-xl font-bold">
-                Welcome, {currentUser.email}
-              </h2>
-              <Button onClick={() => setShowChangePassword(true)}>
-                Change Password
-              </Button>
-            </div>
-          ) : showChangePassword ? (
-            <div className="flex flex-col items-center space-y-4">
-              <h2 className="text-xl font-bold">Change Password</h2>
-              <Input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full max-w-md"
-              />
-              <div className="flex space-x-2">
-                <Button onClick={handlePasswordChange} disabled={loading}>
-                  Update Password
+          <AnimatePresence mode="wait">
+            {currentUser && !showChangePassword ? (
+              <motion.div
+                className="flex flex-col items-center space-y-4 h-[400px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <h2 className="text-xl font-bold">Welcome, {currentUser.email}</h2>
+                <Button onClick={() => setShowChangePassword(true)}>
+                  Change Password
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowChangePassword(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : showForgotPassword ? (
-            <form
-              onSubmit={handleForgotPassword}
-              className="mt-4 flex flex-col items-center"
-            >
-              <div className="w-full max-w-md space-y-4">
-                <h2 className="text-xl font-bold text-center">
-                  Reset Password
-                </h2>
-                <div className="space-y-1">
-                  <div className="text-sm font-medium text-gray-700 px-1">
-                    Email
-                  </div>
-                  <Input
-                    type="email"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                    className="w-full h-10 bg-white"
-                    required
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-green-600 text-lg md:text-xl mt-4"
-                  disabled={loading}
-                >
-                  Send Reset Link
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => setShowForgotPassword(false)}
-                >
-                  Back to Login
-                </Button>
-              </div>
-            </form>
-          ) : (
-            <Tabs
-              defaultValue="account"
-              className="w-full"
-              onValueChange={setActiveTab}
-            >
-              <div className="flex flex-col items-center">
-                <FontAwesomeIcon
-                  icon={activeTab === "account" ? faUser : faRightToBracket}
-                  className="w-12 h-12 md:w-16 md:h-16 text-blue-600 mt-4 hidden md:block"
+              </motion.div>
+            ) : showChangePassword ? (
+              <motion.div
+                className="flex flex-col items-center space-y-4 h-[400px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <h2 className="text-xl font-bold">Change Password</h2>
+                <Input
+                  type="password"
+                  placeholder="New Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full max-w-md"
                 />
-                <h1 className="text-xl md:text-3xl font-bold mt-2 text-center">
-                  {activeTab === "account" ? "Create an account" : "Welcome"}
-                </h1>
-              </div>
-
-              <div className="mt-4 flex justify-center">
-                <TabsList>
-                  <TabsTrigger value="account">Sign Up</TabsTrigger>
-                  <TabsTrigger value="password">Login</TabsTrigger>
-                </TabsList>
-              </div>
-
-              <TabsContent value="account">
-                <form
-                  onSubmit={handleSignUp}
-                  className="mt-4 flex flex-col items-center"
-                >
-                  <div className="w-full max-w-md space-y-4">
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-700 px-1">
-                        Name
-                      </div>
-                      <Input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full h-10 bg-white"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-700 px-1">
-                        Email
-                      </div>
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full h-10 bg-white"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-700 px-1">
-                        Password
-                      </div>
-                      <Input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full h-10 bg-white"
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full bg-blue-600 hover:bg-green-600 text-lg md:text-xl mt-4"
-                      disabled={loading}
-                    >
-                      Create Account
-                    </Button>
-
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                      </div>
-                      <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-gray-500">
-                          Or continue with
-                        </span>
-                      </div>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full border-2"
-                      onClick={handleGoogleSignIn}
-                      disabled={loading}
-                    >
-                      <Google />
-                      Google
-                    </Button>
+                <div className="flex space-x-2">
+                  <Button onClick={handlePasswordChange} disabled={loading}>
+                    Update Password
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowChangePassword(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </motion.div>
+            ) : showForgotPassword ? (
+              <motion.form
+                onSubmit={handleForgotPassword}
+                className="mt-4 flex flex-col items-center h-[400px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="w-full max-w-md space-y-4">
+                  <h2 className="text-xl font-bold text-center">Reset Password</h2>
+                  <div className="space-y-1">
+                    <div className="text-sm font-medium text-gray-700 px-1">Email</div>
+                    <Input
+                      type="email"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      className="w-full h-10 bg-white"
+                      required
+                    />
                   </div>
-                </form>
-              </TabsContent>
 
-              <TabsContent value="password">
-                <form
-                  onSubmit={handleLogin}
-                  className="mt-4 flex flex-col items-center"
+                  <Button
+                    type="submit"
+                    className="w-full bg-blue-600 hover:bg-green-600 text-lg md:text-xl mt-4"
+                    disabled={loading}
+                  >
+                    Send Reset Link
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setShowForgotPassword(false)}
+                  >
+                    Back to Login
+                  </Button>
+                </div>
+              </motion.form>
+            ) : (
+              <Tabs
+                defaultValue="Signup"
+                className="w-full"
+                onValueChange={setActiveTab}
+              >
+                <motion.div 
+                  className="flex flex-col items-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  <div className="w-full max-w-md space-y-4">
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-700 px-1">
-                        Email
-                      </div>
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full h-10 bg-white"
-                        required
-                      />
-                    </div>
+                  <FontAwesomeIcon
+                    icon={activeTab === "Signup" ? faUser : faRightToBracket}
+                    className="w-12 h-12 md:w-16 md:h-16 text-blue-600 mt-4 hidden md:block"
+                  />
+                  <h1 className="text-xl md:text-3xl font-bold mt-2 text-center">
+                    {activeTab === "Signup" ? "Create an account" : "Welcome"}
+                  </h1>
+                </motion.div>
 
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-gray-700 px-1">
-                        Password
-                      </div>
-                      <Input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full h-10 bg-white"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex justify-end">
-                      <Button
-                        type="button"
-                        variant="link"
-                        className="text-sm text-blue-600"
-                        onClick={() => setShowForgotPassword(true)}
-                      >
-                        Forgot Password?
-                      </Button>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-blue-600 hover:bg-green-600 text-lg md:text-xl mt-4"
-                      disabled={loading}
+                <div className="mt-4 flex justify-center">
+                  <TabsList className="bg-white">
+                    <TabsTrigger 
+                      value="Signup"
+                      className="w-44 data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
+                    >
+                      Sign Up
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="Login"
+                      className="w-44 data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
                     >
                       Login
-                    </Button>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
 
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
-                      </div>
-                      <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-gray-500">
-                          Or continue with
-                        </span>
-                      </div>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full border-2"
-                      onClick={handleGoogleSignIn}
-                      disabled={loading}
+                <AnimatePresence mode="wait">
+                  <TabsContent value="Signup" className="mt-0">
+                    <motion.form
+                      onSubmit={handleSignUp}
+                      className="mt-4 flex flex-col items-center h-[400px]"
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      variants={slideVariants}
+                      transition={{ duration: 0.3 }}
                     >
-                      <Google />
-                      Google
-                    </Button>
-                  </div>
-                </form>
-              </TabsContent>
-            </Tabs>
-          )}
+                      <div className="w-full max-w-md space-y-4">
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium text-gray-700 px-1">Name</div>
+                          <Input
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full h-10 bg-white"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium text-gray-700 px-1">Email</div>
+                          <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full h-10 bg-white"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium text-gray-700 px-1">Password</div>
+                          <Input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full h-10 bg-white"
+                            required
+                          />
+                        </div>
+
+                        <Button
+                          type="submit"
+                          className="w-full bg-blue-600 text-lg md:text-xl mt-4"
+                          disabled={loading}
+                        >
+                          Create Account
+                        </Button>
+
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-gray-500">
+                              Or continue with
+                            </span>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-2"
+                          onClick={handleGoogleSignIn}
+                          disabled={loading}
+                        >
+                          <Google />
+                          Google
+                        </Button>
+                      </div>
+                    </motion.form>
+                  </TabsContent>
+
+                  <TabsContent value="Login" className="mt-0">
+                    <motion.form
+                      onSubmit={handleLogin}
+                      className="mt-4 flex flex-col items-center h-[400px]"
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      variants={slideVariants}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className="w-full max-w-md space-y-4">
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium text-gray-700 px-1">Email</div>
+                          <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full h-10 bg-white"
+                            required
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <div className="text-sm font-medium text-gray-700 px-1">Password</div>
+                          <Input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full h-10 bg-white"
+                            required
+                          />
+                        </div>
+
+                        <div className="flex justify-end">
+                          <Button
+                            type="button"
+                            variant="link"
+                            className="text-sm text-blue-600"
+                            onClick={() => setShowForgotPassword(true)}
+                          >
+                            Forgot Password?
+                          </Button>
+                        </div>
+
+                        <Button
+                          type="submit"
+                          className="w-full bg-blue-600 hover:bg-green-600 text-lg md:text-xl mt-4"
+                          disabled={loading}
+                        >
+                          Login
+                        </Button>
+
+                        <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t" />
+                          </div>
+                          <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-white px-2 text-gray-500">
+                              Or continue with
+                            </span>
+                          </div>
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-2"
+                          onClick={handleGoogleSignIn}
+                          disabled={loading}
+                        >
+                          <Google />
+                          Google
+                        </Button>
+                      </div>
+                    </motion.form>
+                  </TabsContent>
+                </AnimatePresence>
+              </Tabs>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
