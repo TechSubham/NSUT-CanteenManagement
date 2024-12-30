@@ -7,7 +7,7 @@ const pool = new Pool({
     password: "Subham@123",
     port: 5432,
 
-})
+});
 pool.connect((err) => {
     if (err) {
         console.log("Error Connecting to the Database", err);
