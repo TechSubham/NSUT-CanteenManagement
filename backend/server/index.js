@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const { createBeverage, getAllBeverages, getBeverageById , getMealsById , getAllMeals , createMeal, createSnacks } = require('./queries');
+const { createBeverage, getAllBeverages, getBeverageById , getMealsById , getAllMeals , createMeal, createSnacks , getAllSnacks , getSnacksById } = require('./queries');
 const { error } = require('console');
 
 const app = express();
@@ -89,7 +89,7 @@ app.get('/beverages/:id', async (req, res) => {
 
 app.get('/snacks/:id', async(req,res)=>{
     try {
-        const snack = await getSnackById(req.params.id);
+        const snack = await getSnacksById(req.params.id);
         if (snack) {
             res.json(snack);
             } else {
@@ -103,7 +103,7 @@ app.get('/snacks/:id', async(req,res)=>{
 
 app.get('/meals/:id',async(req,res)=>{
     try{
-        const meal = await getMealById(req.params.id);
+        const meal = await getMealsById(req.params.id);
         if(meal){
             res.json(meal);
             }else{

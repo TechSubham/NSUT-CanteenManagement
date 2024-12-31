@@ -15,7 +15,7 @@ const Beverages = () => {
   useEffect(() => {
     const fetchBeverages = async () => {
       try {
-        const response = await fetch('http://localhost:8080/beverages');
+        const response = await fetch('http://localhost:5050/beverages');
         if (!response.ok) {
           throw new Error('Failed to fetch beverages');
         }
