@@ -11,49 +11,55 @@ import PrivateRoute from "./contexts/authContext/PrivateRoute";
 import Beverages from "./Pages/Food/Beverages/Beverages";
 import Meal from "./Pages/Food/Meal/Meal";
 import Snacks from "./Pages/Food/Snacks/Snacks";
+import { CartProvider } from './contexts/CartContext';
+import Cart from './Pages/Cart/Cart';
 
 const App = () => {
   return (
+    <CartProvider>
+
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/homepage"
-            element={
-              <PrivateRoute>
-                <HomePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/Food/Beverages"
-            element={
-              <PrivateRoute>
-                <Beverages />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/Food/Meal"
-            element={
-              <PrivateRoute>
-                <Meal />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/Food/Snacks"
-            element={
-              <PrivateRoute>
-                <Snacks />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/login" replace />} />
-        </Routes>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/homepage"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/Food/Beverages"
+              element={
+                <PrivateRoute>
+                  <Beverages />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/Food/Meal"
+              element={
+                <PrivateRoute>
+                  <Meal />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/Food/Snacks"
+              element={
+                <PrivateRoute>
+                  <Snacks />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
       </AuthProvider>
     </Router>
+    </CartProvider>
   );
 };
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
+
 import bg1 from "../../assets/food bg.jpg";
 import bg2 from "../../assets/Cook.jpg";
 import bg3 from "../../assets/food3.jpg";
-import { motion } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 import Navbar from "../Navbar/page";
 import FoodIcons from "../FoodIcons/FoodIcons";
