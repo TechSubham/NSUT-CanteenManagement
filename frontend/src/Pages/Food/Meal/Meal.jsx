@@ -16,9 +16,10 @@ const Meals = () => {
   const {
     totalItems,
     totalAmount,
+    savedItems,
+    toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchMeals = async () => {
       try {
@@ -38,10 +39,13 @@ const Meals = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-
+    }; 
     fetchMeals();
   }, []);
+
+  const isItemSaved = (itemId) => {
+      return savedItems.some(item => item.id === itemId);
+    };
 
   // In the Meals component
   // Update these functions

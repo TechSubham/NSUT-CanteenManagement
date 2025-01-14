@@ -25,9 +25,11 @@ const Beverages = () => {
     removeFromCart,
     totalItems,
     totalAmount,
+    savedItems,
+    toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchBeverages = async () => {
       try {
@@ -51,7 +53,7 @@ const Beverages = () => {
         setIsLoading(false);
       }
     };
-
+    
     fetchBeverages();
   }, []);
 

@@ -24,9 +24,10 @@ const Snacks = () => {
     removeFromCart,
     totalItems,
     totalAmount,
+    savedItems,
+    toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchSnacks = async () => {
       try{
@@ -50,7 +51,7 @@ const Snacks = () => {
         setIsLoading(false);
       }
     };
-
+    
     fetchSnacks();
   }, []);
 

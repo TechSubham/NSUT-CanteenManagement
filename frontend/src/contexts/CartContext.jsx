@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import { getSavedItemsFromLocalStorage, saveItemsToLocalStorage } from '@/lib/localStorage';
+import React, { createContext, useContext, useState , useEffect } from 'react';
 
 const CartContext = createContext();
 
@@ -6,6 +7,7 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [savedItems , setSavedItems] = useState(getSavedItemsFromLocalStorage);
 
   const addToCart = (item, category) => {
     const itemWithCategory = { ...item, category, cartId: `${category}-${item.id}` };
@@ -71,17 +73,45 @@ export function CartProvider({ children }) {
     setTotalAmount(0);
   };
 
+  useEffect(()=>{
+    saveItemsToLocalStorage(savedItems);
+  },[savedItems]);
+
+  const toggleSaveItem = (item) =>{
+    const savedIndex = savedItems.findIndex(
+      (savedItem) => savedItem.id === item.id
+    );
+    if(savedIndex !== -1){
+      const updatedSavedItems = savedItems.filter(
+        (savedItem) => savedItem.id !== item.id
+      );
+      setSavedItems(updatedSavedItems);
+    }
+    else {
+      const updatedSavedItems = [...savedItems,item];
+      setSavedItems(updatedSavedItems);
+    }
+  }
+
+  const removeFromSavedItems = (itemId) => {
+  const updatedSavedItems = savedItems.filter((item) => item.id !== itemId);
+  setSavedItems(updatedSavedItems);
+  };
+
   return (
     <CartContext.Provider
       value={{
         cart,
+        savedItems,
         totalItems,
         totalAmount,
         addToCart,
         removeFromCart,
         updateQuantity,
         getItemQuantity,
-        clearCart
+        clearCart,
+        toggleSaveItem,
+        removeFromSavedItems
       }}
     >
       {children}
