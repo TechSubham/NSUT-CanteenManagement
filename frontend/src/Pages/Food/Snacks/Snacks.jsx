@@ -9,9 +9,11 @@ import Veg from "../../../assets/Veg.png";
 import DefaultSnackImage from "../../../assets/Chocolate.jpg";
 import Star from "../../../assets/star.avif";
 import QuantityControl from "@/assets/QuantityControlbutton";
-
+import { getAuth } from "firebase/auth";
 const Snacks = () => {
+  const currentUser=getAuth().currentUser
   const [snacks, setSnacks] = useState([]);
+  const [favourites,setFavourites]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,13 +29,21 @@ const Snacks = () => {
 
   useEffect(() => {
     const fetchSnacks = async () => {
-      try {
-        const response = await fetch("http://localhost:5050/snacks");
-        if (!response.ok) {
-          throw new Error("Failed to fetch snacks");
-        }
-        const data = await response.json();
-        setSnacks(data);
+      try{
+      const token = await currentUser.getIdToken();
+      const response = await fetch(`http://localhost:5050/snacks`,{
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch snacks");
+      }
+      const data = await response.json();
+      setSnacks(data.snacks);
+      setFavourites(data.favouriteList)
+      console.log(data.favouriteList)
       } catch (err) {
         setError(err.message);
       } finally {
@@ -44,31 +54,7 @@ const Snacks = () => {
     fetchSnacks();
   }, []);
 
-  // Update these functions
-  const handleDecrease = (snack) => {
-    const currentQty = getItemQuantity(snack.id, "snack");
-    if (currentQty === 1) {
-      removeFromCart(snack.id, "snack");
-    } else if (currentQty > 0) {
-      updateQuantity(snack.id, "snack", currentQty - 1);
-    }
-  };
 
-  const handleIncrease = (snack) => {
-    const currentQty = getItemQuantity(snack.id, "snack");
-    if (currentQty === 0) {
-      addToCart(snack, "snack");
-    } else {
-      updateQuantity(snack.id, "snack", currentQty + 1);
-    }
-  };
-
-  const getItemQuantity = (itemId) => {
-    const cartItem = cart.find(
-      (item) => item.id === itemId && item.category === "snack"
-    );
-    return cartItem ? cartItem.quantity : 0;
-  };
 
   const filteredSnacks = snacks.filter((snack) =>
     snack.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,84 +88,16 @@ const Snacks = () => {
       </div>
 
       <div className="mt-4 space-y-4">
-        {filteredSnacks.map((snack) => (
-          <div
-            key={snack.id}
-            className="flex items-start space-x-4 bg-white rounded-lg shadow-sm p-3 relative mx-4"
-          >
-            <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
-              <img
-                src={snack.image_url || DefaultSnackImage}
-                alt={snack.name}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            </div>
-
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <img
-                    src={Veg}
-                    alt="Vegetarian"
-                    className="w-5 h-5 md:w-6 md:h-6"
-                  />
-                  <h3 className="ml-2 text-lg md:text-xl font-bold">
-                    {snack.name}
-                  </h3>
-                </div>
-                <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <FontAwesomeIcon icon={faBookmark} className="text-xl" />
-                </button>
-              </div>
-
-              <p className="font-semibold text-lg mt-1">
-                ₹{snack.selling_price}
-              </p>
-
-              {snack.rating && (
-                <div className="flex items-center mt-1">
-                  <img
-                    src={Star}
-                    alt="Rating"
-                    className="w-4 h-4 md:w-5 md:h-5"
-                  />
-                  <span className="ml-1 text-sm md:text-base">
-                    {snack.rating}
-                  </span>
-                </div>
-              )}
-
-              <p className="mt-1 text-sm md:text-base text-gray-600">
-                {snack.description || "Description about the item"}
-              </p>
-
-              {!snack.availability && (
-                <div className="mt-2 text-red-500 text-sm">
-                  Currently unavailable
-                </div>
-              )}
-
-              {snack.availability && (
-                <div className="absolute bottom-3 right-3">
-                  {getItemQuantity(snack.id) > 0 ? (
-                    <QuantityControl
-                      quantity={getItemQuantity(snack.id)}
-                      onDecrease={() => handleDecrease(snack)}
-                      onIncrease={() => handleIncrease(snack)}
-                    />
-                  ) : (
-                    <button
-                      onClick={() => addToCart(snack, "snack")}
-                      className="bg-white text-green-500 border border-green-500 px-6 py-2 rounded-lg hover:bg-green-50 font-semibold"
-                    >
-                      ADD
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+      {filteredSnacks.map((snack) =>{ 
+          let favourite=false;
+          if (favourites.includes(snack.id)){
+            favourite=true;
+          }
+          return (
+          <MenuItem key={snack.id} id={snack.id} image_url={snack.image_url} name={snack.name} 
+          selling_price={snack.selling_price} rating={snack.rating} description={snack.description}
+          availability={snack.availability} favourite item_type="snack"/>)
+        })}
       </div>
 
       {totalItems > 0 && (

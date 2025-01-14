@@ -9,9 +9,12 @@ import Veg from "../../../assets/Veg.png";
 import Coffee from "../../../assets/coffee.png";
 import Star from "../../../assets/star.avif";
 import QuantityControl from "@/assets/QuantityControlbutton";
-
+import { getAuth } from "firebase/auth";
+import MenuItem from "../components/MenuItem";
 const Beverages = () => {
+  const currentUser=getAuth().currentUser
   const [beverages, setBeverages] = useState([]);
+  const [favourites,setFavourites]=useState([])
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,12 +31,20 @@ const Beverages = () => {
   useEffect(() => {
     const fetchBeverages = async () => {
       try {
-        const response = await fetch("http://localhost:5050/beverages");
+        const token = await currentUser.getIdToken();
+        const response = await fetch(`http://localhost:5050/beverages`,{
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch beverages");
         }
         const data = await response.json();
-        setBeverages(data);
+        setBeverages(data.beverages);
+        setFavourites(data.favouriteList)
+        console.log(data.favouriteList)
       } catch (err) {
         setError(err.message);
       } finally {
@@ -43,31 +54,6 @@ const Beverages = () => {
 
     fetchBeverages();
   }, []);
-
-  const handleDecrease = (beverage) => {
-    const currentQty = getItemQuantity(beverage.id, "beverage");
-    if (currentQty === 1) {
-      removeFromCart(beverage.id, "beverage");
-    } else if (currentQty > 0) {
-      updateQuantity(beverage.id, "beverage", currentQty - 1);
-    }
-  };
-
-  const handleIncrease = (beverage) => {
-    const currentQty = getItemQuantity(beverage.id, "beverage");
-    if (currentQty === 0) {
-      addToCart(beverage, "beverage");
-    } else {
-      updateQuantity(beverage.id, "beverage", currentQty + 1);
-    }
-  };
-
-  const getItemQuantity = (itemId) => {
-    const cartItem = cart.find(
-      (item) => item.id === itemId && item.category === "beverage"
-    );
-    return cartItem ? cartItem.quantity : 0;
-  };
 
   const filteredBeverages = beverages.filter((beverage) =>
     beverage.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -101,84 +87,16 @@ const Beverages = () => {
       </div>
 
       <div className="mt-4 space-y-4">
-        {filteredBeverages.map((beverage) => (
-          <div
-            key={beverage.id}
-            className="flex items-start space-x-4 bg-white rounded-lg shadow-sm p-3 relative mx-4"
-          >
-            <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
-              <img
-                src={beverage.image_url || Coffee}
-                alt={beverage.name}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            </div>
-
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <img
-                    src={Veg}
-                    alt="Vegetarian"
-                    className="w-5 h-5 md:w-6 md:h-6"
-                  />
-                  <h3 className="ml-2 text-lg md:text-xl font-bold">
-                    {beverage.name}
-                  </h3>
-                </div>
-                <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <FontAwesomeIcon icon={faBookmark} className="text-xl" />
-                </button>
-              </div>
-
-              <p className="font-semibold text-lg mt-1">
-                ₹{beverage.selling_price}
-              </p>
-
-              {beverage.rating && (
-                <div className="flex items-center mt-1">
-                  <img
-                    src={Star}
-                    alt="Rating"
-                    className="w-4 h-4 md:w-5 md:h-5"
-                  />
-                  <span className="ml-1 text-sm md:text-base">
-                    {beverage.rating}
-                  </span>
-                </div>
-              )}
-
-              <p className="mt-1 text-sm md:text-base text-gray-600">
-                {beverage.description || "Description about the item"}
-              </p>
-
-              {!beverage.availability && (
-                <div className="mt-2 text-red-500 text-sm">
-                  Currently unavailable
-                </div>
-              )}
-
-              {beverage.availability && (
-                <div className="absolute bottom-3 right-3">
-                  {getItemQuantity(beverage.id) > 0 ? (
-                    <QuantityControl
-                      quantity={getItemQuantity(beverage.id)}
-                      onDecrease={() => handleDecrease(beverage)}
-                      onIncrease={() => handleIncrease(beverage)}
-                    />
-                  ) : (
-                    <button
-                      onClick={() => addToCart(beverage, "beverage")}
-                      className="bg-white text-green-500 border border-green-500 px-6 py-2 rounded-lg hover:bg-green-50 font-semibold"
-                    >
-                      ADD
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+        {filteredBeverages.map((beverage) =>{ 
+          let favourite=false;
+          if (favourites.includes(beverage.id)){
+            favourite=true;
+          }
+          return (
+          <MenuItem key={beverage.id} id={beverage.id} image_url={beverage.image_url} name={beverage.name} 
+          selling_price={beverage.selling_price} rating={beverage.rating} description={beverage.description}
+          availability={beverage.availability} favourite item_type="beverage"/>)
+        })}
       </div>
 
       {totalItems > 0 && (
