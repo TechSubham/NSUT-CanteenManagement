@@ -22,9 +22,10 @@ const Meals = () => {
     removeFromCart,
     totalItems,
     totalAmount,
+    savedItems,
+    toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
-
   useEffect(() => {
     const fetchMeals = async () => {
       try {
@@ -39,10 +40,13 @@ const Meals = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-
+    }; 
     fetchMeals();
   }, []);
+
+  const isItemSaved = (itemId) => {
+      return savedItems.some(item => item.id === itemId);
+    };
 
   // In the Meals component
   // Update these functions
@@ -127,11 +131,17 @@ const Meals = () => {
                     {meal.name}
                   </h3>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <FontAwesomeIcon icon={faBookmark} className="text-xl" />
+                <button
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => toggleSaveItem(meal)}>
+                  <FontAwesomeIcon
+                    icon={faBookmark}
+                    className={`text-xl ${
+                      isItemSaved(meal.id) ? "text-yellow-500" : "text-gray-400"
+                    }`}
+                  />
                 </button>
               </div>
-
               <p className="font-semibold text-lg mt-1">
                 ₹{meal.selling_price}
               </p>

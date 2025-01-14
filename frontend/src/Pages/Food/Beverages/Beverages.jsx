@@ -22,9 +22,11 @@ const Beverages = () => {
     removeFromCart,
     totalItems,
     totalAmount,
+    savedItems,
+    toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchBeverages = async () => {
       try {
@@ -40,10 +42,14 @@ const Beverages = () => {
         setIsLoading(false);
       }
     };
-
+    
     fetchBeverages();
   }, []);
-
+  
+  const isItemSaved = (itemId) => {
+      return savedItems.some(item => item.id === itemId);
+    };
+    
   const handleDecrease = (beverage) => {
     const currentQty = getItemQuantity(beverage.id, "beverage");
     if (currentQty === 1) {
@@ -126,8 +132,11 @@ const Beverages = () => {
                     {beverage.name}
                   </h3>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                  <FontAwesomeIcon icon={faBookmark} className="text-xl" />
+                <button className="text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => toggleSaveItem(beverage)}>
+                    <FontAwesomeIcon icon={faBookmark}
+                        className={`text-xl ${
+                          isItemSaved(beverage.id) ? "text-yellow-500" : "text-gray-400"}`}/>
                 </button>
               </div>
 

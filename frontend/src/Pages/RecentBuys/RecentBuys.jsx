@@ -9,7 +9,7 @@ import { useCart } from "@/contexts/CartContext";
 
 const recentBuys = [
   {
-    id: 1,
+    id: 56,
     name: 'Coffee',
     price: 30,
     rating: 4.5,
@@ -18,7 +18,7 @@ const recentBuys = [
     categoryIcon: Veg,
   },
   {
-    id: 2,
+    id: 58,
     name: 'Tea',
     price: 25,
     rating: 4.2,
@@ -27,7 +27,7 @@ const recentBuys = [
     categoryIcon: Veg, 
   },
   {
-    id: 3,
+    id: 59,
     name: 'Latte',
     price: 40,
     rating: 4.7,
@@ -65,11 +65,11 @@ const RecentBuys = () => {
                   </div>
                   <button
                     className="text-gray-400 hover:text-gray-600 transition-colors"
-                    onClick={() => toggleSaveItem(item)} // Toggle save/unsave
+                    onClick={() => toggleSaveItem(item)}
                   >
                     <FontAwesomeIcon
                       icon={faBookmark}
-                      className={`text-xl ${isItemSaved(item.id) ? 'text-yellow-500' : 'text-gray-400'}`} // Change color based on saved state
+                      className={`text-xl ${isItemSaved(item.id) ? 'text-yellow-500' : 'text-gray-400'}`} 
                     />
                   </button>
                 </div>
