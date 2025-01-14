@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartShopping,
   faMagnifyingGlass,
   faBars,
+  faXmark
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
@@ -12,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -24,9 +26,20 @@ const Navbar = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/");
+      setIsOpen(false);
+    } catch (err) {
+      console.error("Error signing out:", err.message);
+    }
+  };
+
   return (
-    <div>
-      <nav className="fixed top-0 w-full z-50 bg-transparent py-4">
+    <>
+      {/* Main Navbar */}
+      <nav className="fixed top-0 w-full z-40 bg-transparent py-4">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
             <div className="sm:flex hidden items-center space-x-4">
@@ -52,20 +65,62 @@ const Navbar = () => {
               <div>
                 <FontAwesomeIcon icon={faMagnifyingGlass} className="text-white hidden sm:block" />
               </div>
-              <div>
-                <FontAwesomeIcon icon={faBars} className="text-white" />
-              </div>
-              {/* <button
-                onClick={handleGoogleSignIn}
-                className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md font-semibold transition-all duration-300"
+              <button 
+                onClick={() => setIsOpen(true)}
+                className="p-2 hover:bg-white/10 rounded-full transition-colors"
               >
-                Sign In
-              </button> */}
+                <FontAwesomeIcon icon={faBars} className="text-white text-xl" />
+              </button>
             </div>
           </div>
         </div>
       </nav>
-    </div>
+
+      {/* Sidebar */}
+      <div 
+        className={`fixed top-0 right-0 w-64 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex justify-end p-4">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-100"
+          >
+            <FontAwesomeIcon icon={faXmark} className="text-xl text-gray-600" />
+          </button>
+        </div>
+
+        <div className="flex flex-col px-6 py-4">
+          <a 
+            href="#" 
+            className="py-3 text-gray-800 hover:text-orange-500 border-b border-gray-200"
+          >
+            HOME
+          </a>
+          <a 
+            href="#" 
+            className="py-3 text-gray-800 hover:text-orange-500 border-b border-gray-200"
+          >
+            MENU
+          </a>
+          <button
+            onClick={handleLogout}
+            className="mt-6 bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
