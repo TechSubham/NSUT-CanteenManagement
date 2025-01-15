@@ -40,6 +40,8 @@ const Login = () => {
 
   const syncUserToDatabase = async (userData) => {
     try {
+      console.log("Attempting to sync user data:", userData);
+      
       const response = await fetch('http://localhost:5050/users', {
         method: 'POST',
         headers: {
@@ -57,7 +59,7 @@ const Login = () => {
       console.error('Error syncing user data:', error);
       throw error;
     }
-  };
+};
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -107,14 +109,34 @@ const Login = () => {
       setError("");
       setLoading(true);
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await syncUserToDatabase({
-      uid: userCredential.user.uid,
-      email: userCredential.user.email,
-      name: name,
-      created_at: new Date().toISOString()
-    });
+
+      console.log("Firebase user created:", userCredential.user);
+      
+      const userData = {
+        uid: userCredential.user.uid, 
+        email: email,
+        name: name || email.split('@')[0],
+        created_at: new Date().toISOString()
+      };
+      
+      console.log("Sending user data to backend:", userData);
+      
+      const response = await fetch('http://localhost:5050/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create user');
+      }
+      
       navigate("/HomePage");
     } catch (err) {
+      console.error("Signup error:", err);
       setError(err.message);
     }
     setLoading(false);
@@ -135,17 +157,27 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signOut(auth);
+      await signOut(auth); 
       const provider = new GoogleAuthProvider();
+      provider.addScope('profile');
+      provider.addScope('email');
+      
       const result = await signInWithPopup(auth, provider);
+
+      if (!result.user || !result.user.uid) {
+        throw new Error('Failed to get user information from Google sign in');
+      }
+      
       await syncUserToDatabase({
-        uid: result.user.uid,
+        uid: result.user.uid, 
         email: result.user.email,
-        name: result.user.displayName,
+        name: result.user.displayName || result.user.email.split('@')[0],
         created_at: new Date().toISOString()
       });
+      
       navigate("/HomePage");
     } catch (err) {
+      console.error('Google sign in error:', err);
       setError(err.message);
     }
   };
