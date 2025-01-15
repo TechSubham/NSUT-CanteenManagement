@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping, faHistory, faBookmark, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faHistory, faBookmark, faAddressBook } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
 
 const FooterIcons = () => {
@@ -21,10 +21,12 @@ const FooterIcons = () => {
           <span className="text-xs mt-1">Saved</span>
         </button>
         </Link>
+        <Link to = "/contact-us" className="flex flex-col items-center">
         <button className="flex flex-col items-center">
-          <FontAwesomeIcon icon={faUser} className="text-2xl text-gray-400 hover:text-gray-600" />
-          <span className="text-xs mt-1">Profile</span>
+          <FontAwesomeIcon icon={faAddressBook} className="text-2xl text-gray-400 hover:text-gray-600" />
+          <span className="text-xs mt-1">Contact Us</span>
         </button>
+        </Link>
       </div>
     </div>
   );

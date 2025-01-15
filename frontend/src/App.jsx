@@ -14,6 +14,7 @@ import Snacks from "./Pages/Food/Snacks/Snacks";
 import { CartProvider } from './contexts/CartContext';
 import Cart from './Pages/Cart/Cart';
 import SavedItems from "./Pages/Saved/SavedItems";
+import ContactUs from "./Pages/ContactUs/ContactUs";
 
 const App = () => {
   return (
@@ -60,6 +61,14 @@ const App = () => {
               element={
                 <PrivateRoute>
                   <SavedItems/>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/contact-us"
+              element={
+                <PrivateRoute>
+                  <ContactUs/>
                 </PrivateRoute>
               }
             />
