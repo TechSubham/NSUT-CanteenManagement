@@ -1,7 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-
+import MenuItem from "../Food/components/MenuItem";
+import { Menu } from "lucide-react";
 const ItemList = ({ items, removeItem, itemType }) => {
   return (
     <div className="mt-4 space-y-4">

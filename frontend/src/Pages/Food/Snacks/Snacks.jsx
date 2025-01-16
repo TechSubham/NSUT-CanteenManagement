@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "../../../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Veg from "../../../assets/Veg.png";
-import DefaultSnackImage from "../../../assets/Chocolate.jpg";
-import Star from "../../../assets/star.avif";
-import QuantityControl from "@/assets/QuantityControlbutton";
 import { getAuth } from "firebase/auth";
+import MenuItem from "../components/MenuItem";
 const Snacks = () => {
   const currentUser=getAuth().currentUser
   const [snacks, setSnacks] = useState([]);

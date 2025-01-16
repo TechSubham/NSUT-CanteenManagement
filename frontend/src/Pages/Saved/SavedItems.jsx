@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { useCart } from "@/contexts/CartContext";  
 import FooterIcons from "../FooterIcons/FooterIcons";
 import ItemList from "./ItemList";
-
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 const SavedItems = () => {
-  const { savedItems, removeFromSavedItems } = useCart(); // Use saved items and remove function
-
+  const currentUser=getAuth().currentUser
+  const [savedItems, setSavedItems ] = useState([]);
+  console.log(savedItems)
+  useEffect(()=>{
+    async function getFavourites(){
+      try{
+        const token=await currentUser.getIdToken()
+        const response= await axios.get(`http://localhost:5050/favourites`,{
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setSavedItems(response.data.favouriteList)
+      }
+      catch(err){
+        console.log(err.message)
+      }
+    }
+    getFavourites()
+  },[])
   return (
     <div className="pb-20">
       <div className="px-4 py-2">
@@ -15,11 +34,11 @@ const SavedItems = () => {
             <div className="h-0.5 bg-gradient-to-r from-slate-400 to-transparent" />
           </div>
         </div>
-        <ItemList
+        {/* <ItemList
           items={savedItems}
           removeItem={removeFromSavedItems}
           itemType="saved items"
-        />
+        /> */}
       </div>
       <FooterIcons/>
     </div>

@@ -63,7 +63,7 @@ const RecentBuys = () => {
                     <img src={item.categoryIcon} alt="Category" className="w-5 h-5 md:w-6 md:h-6" />
                     <h3 className="ml-2 text-lg md:text-xl font-bold">{item.name}</h3>
                   </div>
-                  {/* <button
+                  <button
                     className="text-gray-400 hover:text-gray-600 transition-colors"
                     onClick={() => toggleSaveItem(item)}
                   >
@@ -71,7 +71,7 @@ const RecentBuys = () => {
                       icon={faBookmark}
                       className={`text-xl ${isItemSaved(item.id) ? 'text-yellow-500' : 'text-gray-400'}`} 
                     />
-                  </button> */}
+                  </button>
                 </div>
                 <p className="font-semibold text-lg mt-1">₹{item.price}</p>
                 <div className="flex items-center mt-1">
