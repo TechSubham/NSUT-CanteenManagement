@@ -70,13 +70,12 @@ const MenuItem=(props)=>{
             updateFavourite();
         }
     },[toggleFavourite])
+    if(favourite){
     return (
-        <div
-            className="flex items-start space-x-4 bg-white rounded-lg shadow-sm p-3 relative mx-4"
-          >
+      <div className="flex items-start space-x-4 bg-white rounded-lg shadow-sm p-3 relative mx-4">
             <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0">
               <img
-                src={props.image_url }
+                src={props.image_url}
                 alt={props.name}
                 className="w-full h-full object-cover rounded-lg"
               />
@@ -95,9 +94,9 @@ const MenuItem=(props)=>{
                   </h3>
                 </div>
                 <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={()=>{setToggleFavourite(1)}}>
-                {favourite?
-                  <FontAwesomeIcon icon={faHeart} className="text-xl" style={{ color: 'goldenrod' }}/>:
-                  <FontAwesomeIcon icon={faHeart} className="text-xl"/>
+                  {favourite?
+                  <FontAwesomeIcon icon={faHeart} className="text-xl" style={{ color: 'goldenrod' }} />:
+                  <FontAwesomeIcon icon={faHeart} className="text-xl" />
                   }
                 </button>
               </div>
@@ -148,6 +147,7 @@ const MenuItem=(props)=>{
                 </div>)}
             </div>
         </div>
-        )
+      )
+    }
 }
 export default MenuItem;

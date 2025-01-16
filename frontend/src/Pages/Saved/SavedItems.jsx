@@ -4,6 +4,7 @@ import FooterIcons from "../FooterIcons/FooterIcons";
 import ItemList from "./ItemList";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
+import MenuItem from "../Food/components/MenuItem";
 const SavedItems = () => {
   const currentUser=getAuth().currentUser
   const [savedItems, setSavedItems ] = useState([]);
@@ -17,7 +18,7 @@ const SavedItems = () => {
             'Authorization': `Bearer ${token}`,
           },
         });
-        setSavedItems(response.data.favouriteList)
+        setSavedItems(response.data)
       }
       catch(err){
         console.log(err.message)
@@ -34,11 +35,11 @@ const SavedItems = () => {
             <div className="h-0.5 bg-gradient-to-r from-slate-400 to-transparent" />
           </div>
         </div>
-        {/* <ItemList
+        {/* <MenuItem/> */}
+        <ItemList
           items={savedItems}
-          removeItem={removeFromSavedItems}
           itemType="saved items"
-        /> */}
+        />
       </div>
       <FooterIcons/>
     </div>
