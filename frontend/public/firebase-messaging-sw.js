@@ -1,4 +1,4 @@
-// public/firebase-messaging-sw.js
+
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
@@ -13,16 +13,26 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
 messaging.onBackgroundMessage(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message:', payload);
-  
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: '/favicon.ico'
-  };
 
-  return self.registration.showNotification(
-    payload.notification.title,
-    notificationOptions
-  );
+  if (payload.notification) {
+    const notificationOptions = {
+      body: payload.notification.body,
+      icon: '/favicon.ico'
+    };
+
+    return self.registration.showNotification(
+      payload.notification.title,
+      notificationOptions
+    );
+  }
 });
