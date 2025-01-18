@@ -15,8 +15,18 @@ import { CartProvider } from './contexts/CartContext';
 import Cart from './Pages/Cart/Cart';
 import SavedItems from "./Pages/Saved/SavedItems";
 import ContactUs from "./Pages/ContactUs/ContactUs";
+import { useEffect } from "react";
+import { setupNotifications, setupMessageListener } from './firebase/firebase';
+
 
 const App = () => {
+  useEffect(() => {
+    setupNotifications()
+      .then(() => console.log('Notifications setup complete'))
+      .catch(error => console.error('Notifications setup failed:', error));
+    
+    setupMessageListener();
+  }, []);
   return (
     <CartProvider>
 
