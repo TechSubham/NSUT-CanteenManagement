@@ -1,9 +1,9 @@
 import Veg from "../../../assets/Veg.png";
-import Panner from "../../../assets/panner.avif";
-import Star from "../../../assets/star.avif";
+
+
 import QuantityControl from "@/assets/QuantityControlbutton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd, faBookmark, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useCart } from "@/contexts/CartContext";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
@@ -106,7 +106,7 @@ const MenuItem=(props)=>{
                 ₹{props.selling_price}
               </p>
 
-              {props.rating && (
+              {/* {props.rating && (
                 <div className="flex items-center mt-1">
                   <img
                     src={Star}
@@ -117,11 +117,11 @@ const MenuItem=(props)=>{
                     {props.rating}
                   </span>
                 </div>
-              )}
+              )} */}
 
-              <p className="mt-1 text-sm md:text-base text-gray-600">
+              {/* <p className="mt-1 text-sm md:text-base text-gray-600">
                 {props.description || "Description about the item"}
-              </p>
+              </p> */}
 
               {!props.availability && (
                 <div className="mt-2 text-red-500 text-sm">

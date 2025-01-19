@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+
 import { useCart } from "../../../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import Veg from "../../../assets/Veg.png";
-import Coffee from "../../../assets/coffee.png";
-import Star from "../../../assets/star.avif";
-import QuantityControl from "@/assets/QuantityControlbutton";
+
 import { getAuth } from "firebase/auth";
 import MenuItem from "../components/MenuItem";
 const Beverages = () => {
@@ -19,14 +15,10 @@ const Beverages = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const {
-    cart,
-    addToCart,
-    updateQuantity,
-    removeFromCart,
+
     totalItems,
     totalAmount,
-    savedItems,
-    toggleSaveItem
+
   } = useCart();
   const navigate = useNavigate();
   
