@@ -4,12 +4,12 @@ import { useCart } from "../../../contexts/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import MenuItem from "../components/MenuItem";
-import { getAuth } from "firebase/auth";
+import { getFirebaseAuth } from "../../../firebase/firebase"; // Updated import
 
 const Meals = () => {
-  const currentUser=getAuth().currentUser
+  const auth = getFirebaseAuth(); // Get auth instance
   const [meals, setMeals] = useState([]);
-  const [favourites,setFavourites]=useState([])
+  const [favourites, setFavourites] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,59 +20,45 @@ const Meals = () => {
     toggleSaveItem
   } = useCart();
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchMeals = async () => {
       try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          throw new Error('No authenticated user');
+        }
+
         const token = await currentUser.getIdToken();
-        const response = await fetch(`http://localhost:5050/meals`,{
+        const response = await fetch(`http://localhost:5050/meals`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         setMeals(data.meals);
-        setFavourites(data.favouriteList)
-        console.log(data.favouriteList)
+        setFavourites(data.favouriteList);
       } catch (err) {
         setError(err.message);
+        console.error('Error fetching meals:', err);
       } finally {
         setIsLoading(false);
       }
-    }; 
-    fetchMeals();
-  }, []);
-
-  const isItemSaved = (itemId) => {
-      return savedItems.some(item => item.id === itemId);
     };
 
-  // In the Meals component
-  // Update these functions
-  // const handleDecrease = (meal) => {
-  //   const currentQty = getItemQuantity(meal.id, "meal");
-  //   if (currentQty === 1) {
-  //     removeFromCart(meal.id, "meal");
-  //   } else if (currentQty > 0) {
-  //     updateQuantity(meal.id, "meal", currentQty - 1);
-  //   }
-  // };
+    fetchMeals();
+  }, [auth]);
 
-  // const handleIncrease = (meal) => {
-  //   const currentQty = getItemQuantity(meal.id, "meal");
-  //   if (currentQty === 0) {
-  //     addToCart(meal, "meal");
-  //   } else {
-  //     updateQuantity(meal.id, "meal", currentQty + 1);
-  //   }
-  // };
+  const isItemSaved = (itemId) => {
+    return savedItems.some(item => item.id === itemId);
+  };
 
-  // const getItemQuantity = (itemId) => {
-  //   const cartItem = cart.find(
-  //     (item) => item.id === itemId && item.category === "meal"
-  //   );
-  //   return cartItem ? cartItem.quantity : 0;
-  // };
   const filteredMeals = meals.filter((meal) =>
     meal.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -105,15 +91,23 @@ const Meals = () => {
       </div>
 
       <div className="mt-4 space-y-4">
-        {filteredMeals.map((meal) => 
-          { 
-            var favourite=favourites.includes(meal.id)
-            return (
-                    <MenuItem key={meal.id} id={meal.id} image_url={meal.image_url} name={meal.name} 
-                    selling_price={meal.selling_price} rating={meal.rating} description={meal.description}
-                    availability={meal.availability} favourite={favourite} item_type="meal"/>
-              )}
-            )}
+        {filteredMeals.map((meal) => {
+          const favourite = favourites.includes(meal.id);
+          return (
+            <MenuItem
+              key={meal.id}
+              id={meal.id}
+              image_url={meal.image_url}
+              name={meal.name}
+              selling_price={meal.selling_price}
+              rating={meal.rating}
+              description={meal.description}
+              availability={meal.availability}
+              favourite={favourite}
+              item_type="meal"
+            />
+          );
+        })}
       </div>
 
       {totalItems > 0 && (

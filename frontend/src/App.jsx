@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/authContext";
-import Login from "./pages/Login";
+import Login from "./Pages/Login";
 import HomePage from "./pages/HomePage/page";
 import PrivateRoute from "./contexts/authContext/PrivateRoute";
 import Beverages from "./Pages/Food/Beverages/Beverages";
