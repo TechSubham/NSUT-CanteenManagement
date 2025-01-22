@@ -95,8 +95,8 @@ const MenuItem=(props)=>{
                 </div>
                 <button className="text-gray-400 hover:text-gray-600 transition-colors" onClick={()=>{setToggleFavourite(1)}}>
                   {favourite?
-                  <FontAwesomeIcon icon={faHeart} className="text-xl" style={{ color: 'goldenrod' }} />:
-                  <FontAwesomeIcon icon={faHeart} className="text-xl" />
+                  <FontAwesomeIcon icon={faHeart} className="text-xl touch-manipulation" style={{ color: 'goldenrod' }} />:
+                  <FontAwesomeIcon icon={faHeart} className="text-xl touch-manipulation" />
                   }
                 </button>
               </div>
