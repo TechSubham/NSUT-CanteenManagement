@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingCart, Search, Menu, X } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate(); 
 
-  // Handle scroll event
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 0);
@@ -15,7 +16,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Disable scroll when the sidebar is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
@@ -31,6 +31,7 @@ const Navbar = () => {
   const handleLogout = () => {
     console.log("Logging out");
     setIsOpen(false);
+    navigate('/login'); 
   };
 
   return (

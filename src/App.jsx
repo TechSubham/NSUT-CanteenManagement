@@ -30,8 +30,7 @@ const App = () => {
     setupMessageListener();
   }, []);
   return (
-    <CartProvider>
-
+  <CartProvider>
     <Router>
       <AuthProvider>
           <Routes>
