@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import QuantityControl from '@/assets/QuantityControlbutton';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FooterIcons from '../FooterIcons/FooterIcons';
 
 const Cart = () => {
   const {
@@ -86,6 +87,9 @@ const Cart = () => {
           CHECK OUT
         </Button>
       </div>
+      <FooterIcons
+      
+      />
     </div>
   );
 };

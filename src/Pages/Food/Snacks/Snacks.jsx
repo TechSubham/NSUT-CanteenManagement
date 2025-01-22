@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { getAuth } from "firebase/auth";
 import MenuItem from "../components/MenuItem";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 const Snacks = () => {
   const currentUser = getAuth().currentUser
   const [snacks, setSnacks] = useState([]);
@@ -118,21 +118,28 @@ const Snacks = () => {
       </div>
 
       {totalItems > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-green-500 text-white p-4">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div>
+        {/* Green Banner */}
+        <div className="m-2 rounded-2xl fixed bottom-0 left-0 right-0 bg-green-500 text-white p-4 z-20">
+          <div className="h-9 max-w-7xl mx-auto flex justify-between items-center">
             <div>
-              <span className="font-bold">{totalItems} items</span>
+              <span className="text-lg font-bold">{totalItems} items</span>
               <span className="mx-2">|</span>
-              <span className="font-bold">₹{totalAmount}</span>
+              <span className="text-lg font-bold">₹{totalAmount}</span>
             </div>
-            <Button
+            <div
               onClick={() => navigate("/cart")}
-              className="bg-white text-green-500 hover:bg-gray-100"
+              className="bg-green-500 text-white hover:bg-gray-100 mr-5 font-bold text-xl cursor-pointer"
             >
               View Cart
-            </Button>
+              <FontAwesomeIcon icon={faCartShopping} className="ml-2" />
+            </div>
           </div>
         </div>
+      
+        {/* White Background */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white h-16 z-10"></div>
+      </div>
       )}
     </div>
   );
