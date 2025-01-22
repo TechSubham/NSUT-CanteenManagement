@@ -12,6 +12,7 @@ const SavedItems = () => {
 
   useEffect(() => {
     async function getFavourites() {
+      // Check if user is logged in
       if (!currentUser) {
         setError("Please log in to view saved items");
         return;
