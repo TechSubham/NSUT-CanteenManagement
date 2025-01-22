@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/authContext";
-import Login from "./Pages/Login.jsx";
+import Login from "./Pages/Login/page";
 import StatsPage from "./Pages/Stats/page.jsx";
 import HomePage from "./Pages/HomePage/page.jsx";
 import PrivateRoute from "./contexts/authContext/PrivateRoute";

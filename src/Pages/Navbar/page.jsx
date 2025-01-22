@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ShoppingCart, Search, Menu, X } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { signOut } from "firebase/auth"; 
+import { auth } from "../../firebase/firebase";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,10 +30,17 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("Logging out");
     setIsOpen(false);
-    navigate('/login'); 
+
+    try {
+      await signOut(auth); // Sign out the user from Firebase
+      navigate('/login', { replace: true }); 
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Handle sign out error, maybe display an error message to the user
+    }
   };
 
   return (

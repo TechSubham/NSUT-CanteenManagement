@@ -5,8 +5,8 @@ import { faUser, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Logo from "../assets/Chief.jpg";
-import Google from "../assets/Google.jsx";
+import Logo from "../../assets/Chief.jpg";
+import Google from "../../assets/Google.jsx";
 import { useAuth } from "@/contexts/authContext";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,7 +18,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
