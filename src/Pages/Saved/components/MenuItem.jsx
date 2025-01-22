@@ -49,7 +49,7 @@ const MenuItem=(props)=>{
             try{
                 const token = await currentUser.getIdToken();
                 console.log(props)
-                await axios.post("http://localhost:5050/update-favourite",{
+                await axios.post("https://nsutcanteenbackend.onrender.com/update-favourite",{
                     item_id:props.id,
                     favourite:!favourite,
                     item_type:props.item_type

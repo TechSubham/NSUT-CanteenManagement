@@ -20,7 +20,7 @@ const SavedItems = () => {
 
       try {
         const token = await currentUser.getIdToken();
-        const response = await axios.get(`http://localhost:5050/favourites`, {
+        const response = await axios.get(`https://nsutcanteenbackend.onrender.com/favourites`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
