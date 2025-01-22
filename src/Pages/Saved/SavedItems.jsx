@@ -1,10 +1,10 @@
-import React, { useEffect,useState } from "react";
-import { useCart } from "@/contexts/CartContext";  
+
+import React, { useEffect,useState } from "react"; 
 import FooterIcons from "../FooterIcons/FooterIcons";
 import ItemList from "./ItemList";
 import axios from "axios";
 import { getAuth } from "firebase/auth";
-import MenuItem from "../Food/components/MenuItem";
+
 const SavedItems = () => {
   const currentUser = getAuth().currentUser;
   const [savedItems, setSavedItems] = useState([]);
@@ -60,3 +60,4 @@ const SavedItems = () => {
 };
 
 export default SavedItems;
+
