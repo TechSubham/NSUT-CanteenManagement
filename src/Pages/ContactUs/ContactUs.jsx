@@ -26,7 +26,7 @@ const ContactUs = () => {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5050/contact-us", data);
+      const res = await axios.post("https://nsutcanteenbackend.onrender.com/contact-us", data);
       setMessage(res.data.message);
       reset();
     } catch (err) {
