@@ -45,7 +45,7 @@ const ContactUs = () => {
       <p className="text-center text-gray-700 mb-10">Let’s connect and share our love for delicious food!</p>
 
       <div className="grid md:grid-cols-2 gap-10">
-        <div className="bg-white rounded-lg shadow-md p-8 contact-info opacity-0 transition-opacity duration-1000">
+        <div className="bg-white rounded-lg p-8 contact-info opacity-0 transition-opacity duration-1000">
           <h2 className="text-3xl font-bold mb-6 text-green-700">Contact Information</h2>
           <div className="space-y-6">
             <div className="flex items-center">
@@ -80,7 +80,7 @@ const ContactUs = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-8 contact-form opacity-0 transition-opacity duration-1000">
+        <div className="bg-white rounded-lg p-8 contact-form opacity-0 transition-opacity duration-1000">
           <h2 className="text-3xl font-bold mb-6 text-green-700">Send Us a Message</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6">
