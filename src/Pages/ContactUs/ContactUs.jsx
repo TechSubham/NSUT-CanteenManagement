@@ -50,11 +50,11 @@ const ContactUs = () => {
           <div className="space-y-6">
             <div className="flex items-center">
               <FontAwesomeIcon icon={faEnvelope} className="text-orange-500 w-6 h-6 mr-3" />
-              <span className="text-lg font-medium text-gray-800">your.foodsite@gmail.com</span>
+              <span className="text-lg font-medium text-gray-800">subhamchauhan523@gmail.com</span>
             </div>
             <div className="flex items-center">
               <FontAwesomeIcon icon={faPhone} className="text-orange-500 w-6 h-6 mr-3" />
-              <span className="text-lg font-medium text-gray-800">+91 XXXXX XXXXX</span>
+              <span className="text-lg font-medium text-gray-800">+91 7253996982</span>
             </div>
             <div className="flex items-center">
               <FontAwesomeIcon icon={faMapMarkerAlt} className="text-orange-500 w-6 h-6 mr-3" />
