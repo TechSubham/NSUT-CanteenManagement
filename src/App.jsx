@@ -86,9 +86,7 @@ const App = () => {
             <Route
               path="/contact-us"
               element={
-                <PrivateRoute>
                   <ContactUs/>
-                </PrivateRoute>
               }
             />
             <Route
